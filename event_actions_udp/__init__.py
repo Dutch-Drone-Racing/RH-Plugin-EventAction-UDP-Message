@@ -2,21 +2,22 @@
 
 import logging
 logger = logging.getLogger(__name__)
-from eventmanager import Evt
-from RHUtils import catchLogExceptionsWrapper
+
+#from eventmanager import Evt
+#from RHUtils import catchLogExceptionsWrapper
 from EventActions import ActionEffect
 import socket
+from RHUI import UIField, UIFieldType, UIFieldSelectOption
 
-def registerHandlers(args):
-    if 'registerFn' in args:
+
+def register_handlers(args):
+    if 'register_fn' in args:
         for effect in discover():
-            args['registerFn'](effect)
+            args['register_fn'](effect)
 
-def initialize(**kwargs):
-    if 'Events' in kwargs:
-        kwargs['Events'].on('actionsInitialize', 'action_UDP_message', registerHandlers, {}, 75, True)
+def initialize(rhapi):
+    rhapi.events.on('actionsInitialize', 'action_UDP_message', register_handlers, {}, 75, True)
         
-@catchLogExceptionsWrapper
 def UDPMessageEffect(action, args):
     text = action['text']
     if 'node_index' in args:
@@ -29,7 +30,8 @@ def UDPMessageEffect(action, args):
     UDP_portInt = int(UDP_port)
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP
     sock.sendto(bytes(UDP_message, "utf-8"), (UDP_ipaddress, UDP_portInt))
-    logger.debug("Sent UDP message {} to {}:{}". format(UDP_message, UDP_ipaddress, UDP_port))
+    #logger.debug("Sent UDP message {} to {}:{}". format(UDP_message, UDP_ipaddress, UDP_port))
+
 
 def discover():
     return [
@@ -38,22 +40,9 @@ def discover():
             'UDP Message',
             UDPMessageEffect,
             [
-                {
-                    'id': 'text',
-                    'name': 'UDP message',
-                    'type': 'text',
-                },
-                {
-                    'id': 'ipaddress',
-                    'name': 'UDP IP Address',
-                    'type': 'text',
-                },
-                {
-                    'id': 'udpport',
-                    'name': 'UDP Port',
-                    'type': 'text',
-                }
-
+                UIField('udp_message', "UDP Message", UIFieldType.text),
+                UIField('udp_ipaddress', "IP Address", UIFieldType.text),
+                UIField('udp_port', "UDP Port", UIFieldType.text)
             ]
         )
     ]

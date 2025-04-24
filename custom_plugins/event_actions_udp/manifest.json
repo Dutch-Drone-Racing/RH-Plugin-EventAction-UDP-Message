@@ -1,0 +1,13 @@
+{
+    "name": "Event Actions UDP",
+    "domain": "event_actions_udp",
+    "author": "Dutch Drone Racing",
+    "author_uri": "https://dutchdroneracing.com",
+    "description": "Adds functionality to send UDP messages on Event Actions.",
+    "info_uri": "https://github.com/Dutch-Drone-Racing/RH-Plugin-EventAction-UDP-Message",
+    "license": "DDR",
+    "license_uri": "https://github.com/RotorHazard/RotorHazard/blob/main/LICENSE",
+    "version": "1.2.0",
+    "required_rhapi_version": "1.2",
+    "category": ["Utilities"]
+}

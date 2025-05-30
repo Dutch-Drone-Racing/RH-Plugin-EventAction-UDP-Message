@@ -2,9 +2,8 @@
 
 import logging
 logger = logging.getLogger(__name__)
-
+import RHData
 from eventmanager import Evt
-#from RHUtils import catchLogExceptionsWrapper
 from EventActions import ActionEffect
 import socket
 from RHUI import UIField, UIFieldType, UIFieldSelectOption
@@ -14,11 +13,7 @@ class ActionsUDP():
         self._rhapi = rhapi
 
     def UDPMessageEffect(self, action, args):
-        text = action['udp_message']
-        if 'node_index' in args:
-            pilotNode = str(self._rhapi.race.node_pilots[args['node_index']])
-            text = text.replace('%PILOT_NODE%', pilotNode)
-
+        text = RHData.doReplace(self._rhapi, action['udp_message'], args)
         UDP_message = text
         UDP_ipaddress = action['udp_ipaddress']
         UDP_port = action['udp_port']
